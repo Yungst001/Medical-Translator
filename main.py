@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import font, messagebox
 from urllib.request import urlopen
 from urllib.error import URLError, HTTPError
+from translator import translate_drug_info
+from api_client import get_drug_information
 import socket
 
 
@@ -40,15 +42,12 @@ def submit_drug():
             )
             return
 
-        # The medical-information API/lookup can be connected here by the team.
+        fda_text = get_drug_information(drug_name)
+        friendly_text = translate_drug_info(drug_name, fda_text)
+        
         info_text.pack(pady=20, padx=20, fill=tk.BOTH, expand=True)
         info_text.delete("1.0", tk.END)
-        info_text.insert(
-            tk.END,
-            f"Internet connection successful.\n\n"
-            f"Medicine entered: {drug_name}\n\n"
-            "The medicine information lookup will be connected here."
-        )
+        info_text.insert(tk.END, friendly_text)
 
     except Exception as error:
         # Safety net for unexpected errors so the app displays a message
